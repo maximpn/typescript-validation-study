@@ -7,7 +7,7 @@ export interface PersonFormSchema {
   /**
    * Unknown Property
    */
-  [x: string]: any;
+  [x: string]: unknown;
   dob: Date;
   name: string;
   password: string;

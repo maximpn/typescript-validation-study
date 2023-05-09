@@ -7,7 +7,7 @@ export interface DriverSchema {
   /**
    * Unknown Property
    */
-  [x: string]: any;
+  [x: string]: unknown;
   dob: Date;
   licenseNo: string;
   name: string;

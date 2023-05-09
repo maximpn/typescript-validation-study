@@ -7,7 +7,7 @@ export interface DriverSchema {
   /**
    * Unknown Property
    */
-  [x: string]: any;
+  [x: string]: unknown;
   dob: Date;
   licenseNo: string;
   name: string;
@@ -20,7 +20,7 @@ export type FleetSchema = ({
     /**
      * Unknown Property
      */
-    [x: string]: any;
+    [x: string]: unknown;
     dob: Date;
     licenseNo: string;
     name: string;
@@ -38,7 +38,7 @@ export interface PersonFormSchema {
   /**
    * Unknown Property
    */
-  [x: string]: any;
+  [x: string]: unknown;
   dob: Date;
   name: string;
   password: string;
@@ -50,7 +50,7 @@ export interface PersonSchema {
   /**
    * Unknown Property
    */
-  [x: string]: any;
+  [x: string]: unknown;
   dob: Date;
   name: string;
   password: string;

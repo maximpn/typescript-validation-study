@@ -2,39 +2,39 @@
 export type Validator = (input: unknown) => any;
 
 export interface Validators {
-    person?: Validator,
-    personForm?: Validator,
-    driver?: Validator,
-    vehicle?: Validator,
-    fleet?: Validator
+  person?: Validator;
+  personForm?: Validator;
+  driver?: Validator;
+  vehicle?: Validator;
+  fleet?: Validator;
 }
 
-export type TestCase = 
-    {
-        schema: keyof Validators,
-        id: string,
-        data: any,
-        comment?: string,
-        result: boolean
-    }
+export type TestCase = {
+  schema: keyof Validators;
+  id: string;
+  data: any;
+  comment?: string;
+  result: boolean;
+};
 
-export type TestCases = TestCase[]    
+export type TestCases = TestCase[];
 
-
-import iots from './solutions/io-ts'
-import joi from './solutions/joi'
-import jschema from './solutions/json-schema'
-import ajvStandalone from './solutions/json-schema/standalone'
-import yup from './solutions/yup'
-import zod from "./solutions/zod"
-import superstruct from "./solutions/superstruct"
+import iots from "./solutions/io-ts";
+import joi from "./solutions/joi";
+import jschema from "./solutions/json-schema";
+import ajvStandalone from "./solutions/json-schema/standalone";
+import yup from "./solutions/yup";
+import zod from "./solutions/zod";
+import superstruct from "./solutions/superstruct";
+import runtypes from "./solutions/runtypes";
 
 export const solutions: [string, Validators][] = [
-    ["io-ts", iots],
-    ["joi", joi],
-    ["json-schema", jschema],
-    ['yup', yup],
-    ['zod', zod],
-    ['superstruct', superstruct],
-    ['ajv-standalone', ajvStandalone]
+  ["io-ts", iots],
+  ["joi", joi],
+  ["json-schema", jschema],
+  ["yup", yup],
+  ["zod", zod],
+  ["superstruct", superstruct],
+  ["ajv-standalone", ajvStandalone],
+  ["runtypes", runtypes],
 ];
