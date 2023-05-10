@@ -6,7 +6,7 @@ async function types(): Promise<void> {
   // Configure your settings here
   const result = await convertFromDirectory({
     schemaDirectory: './solutions/joi/schemas',
-    typeOutputDirectory: './solutions/joi/interfaces'
+    typeOutputDirectory: './solutions/joi/interfaces',
   });
 
   if (result) {

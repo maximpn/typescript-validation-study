@@ -1,29 +1,29 @@
 {
-    "$id": "person.json",
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "title": "Person",
-    "description": "A Person",
-    "type": "object",
-    "allOf": [
-        {
-            "$ref": "person-basic.json"
-        },
-        {
-            "properties": {
-                "dob": {
-                    "type": "string",
-                    "toDate": "",
-                    "anyOf": [
-                        {
-                            "format": "date"
-                        },
-                        {
-                            "format": "date-time"
-                        }
-                    ],
-                    "olderThanFromNow": 567648000000
-                }
+  "$id": "person.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Person",
+  "description": "A Person",
+  "type": "object",
+  "allOf": [
+    {
+      "$ref": "person-basic.json"
+    },
+    {
+      "properties": {
+        "dob": {
+          "type": "string",
+          "toDate": "",
+          "anyOf": [
+            {
+              "format": "date"
+            },
+            {
+              "format": "date-time"
             }
+          ],
+          "olderThanFromNow": 567648000000
         }
-    ]
+      }
+    }
+  ]
 }

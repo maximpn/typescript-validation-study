@@ -1,7 +1,7 @@
 // must export 'validators'
-import * as yup from "yup";
-import { Validators } from "../..";
-import * as schemas from "./schemas";
+import * as yup from 'yup';
+import { Validators } from '../..';
+import * as schemas from './schemas';
 
 const validator: (schema: yup.Schema) => (data: any) => any =
   (schema) => (data) => {

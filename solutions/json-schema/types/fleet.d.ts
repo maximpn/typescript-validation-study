@@ -35,7 +35,7 @@ export interface Person {
       }
   ) &
     string;
-  sex?: "M" | "F" | "O";
+  sex?: 'M' | 'F' | 'O';
   password: string;
   [k: string]: unknown;
 }
@@ -43,7 +43,7 @@ export interface Person {
  * Vehicle
  */
 export interface Vehicle {
-  type: "car" | "bus";
+  type: 'car' | 'bus';
   seats: number;
   length: number;
   [k: string]: unknown;

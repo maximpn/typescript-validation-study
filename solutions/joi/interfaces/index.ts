@@ -15,7 +15,7 @@ export interface DriverSchema {
   sex?: 'M' | 'F' | 'O';
 }
 
-export type FleetSchema = ({
+export type FleetSchema = {
   driver?: {
     /**
      * Unknown Property
@@ -32,7 +32,7 @@ export type FleetSchema = ({
     seats: number;
     type: 'car' | 'bus';
   };
-})[];
+}[];
 
 export interface PersonFormSchema {
   /**

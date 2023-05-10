@@ -9,7 +9,7 @@
  * Vehicle
  */
 export interface Vehicle {
-  type: "car" | "bus";
+  type: 'car' | 'bus';
   seats: number;
   length: number;
   [k: string]: unknown;

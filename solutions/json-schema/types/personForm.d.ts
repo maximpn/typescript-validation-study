@@ -9,7 +9,7 @@
  * Person Form with repeat password
  */
 export type PersonForm = Person & {
-  repeatPassword: {$data: "/password"};
+  repeatPassword: { $data: '/password' };
   [k: string]: unknown;
 };
 
@@ -21,7 +21,7 @@ export interface Person {
   dob: {
     [k: string]: unknown;
   } & string;
-  sex?: "M" | "F" | "O";
+  sex?: 'M' | 'F' | 'O';
   password: string;
   [k: string]: unknown;
 }

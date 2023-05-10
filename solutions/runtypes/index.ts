@@ -6,9 +6,9 @@
  */
 
 // must export 'validators'
-import { RuntypeBase } from "runtypes/lib/runtype";
-import { Validators } from "../..";
-import * as schemas from "./schemas";
+import { RuntypeBase } from 'runtypes/lib/runtype';
+import { Validators } from '../..';
+import * as schemas from './schemas';
 
 const validator: (schema: RuntypeBase) => (data: unknown) => unknown =
   (schema) => (data) => {
