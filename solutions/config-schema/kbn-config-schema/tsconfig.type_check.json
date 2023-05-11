@@ -1,0 +1,20 @@
+{
+  "extends": "../../tsconfig.base.type_check.json",
+  "compilerOptions": {
+    "outDir": "target/types",
+    "stripInternal": true,
+    "types": [
+      "jest",
+      "node"
+    ],
+    "composite": true,
+    "rootDir": "."
+  },
+  "include": [
+    "**/*.ts"
+  ],
+  "exclude": [
+    "target/**/*"
+  ],
+  "references": []
+}

@@ -19,6 +19,7 @@ export type TestCase = {
 
 export type TestCases = TestCase[];
 
+import kbnConfigSchema from './solutions/config-schema';
 import iots from './solutions/io-ts';
 import joi from './solutions/joi';
 import jschema from './solutions/json-schema';
@@ -29,6 +30,7 @@ import superstruct from './solutions/superstruct';
 import runtypes from './solutions/runtypes';
 
 export const solutions: [string, Validators][] = [
+  ['@kbn/config-schema', kbnConfigSchema],
   ['io-ts', iots],
   ['joi', joi],
   ['json-schema', jschema],
