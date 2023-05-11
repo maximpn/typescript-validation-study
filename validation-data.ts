@@ -1,4 +1,3 @@
-import { resolveModuleName } from 'typescript';
 import { TestCases } from '.';
 
 const _testCases: TestCases = [

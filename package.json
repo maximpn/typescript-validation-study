@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "run-s pre build-clean jest",
+    "measure-performance": "ts-node performance.ts",
     "jest": "jest --verbose",
     "build-clean": "tsc; LAST=$?; rm -fr build; exit $LAST",
     "pre": "run-p pre:*",
