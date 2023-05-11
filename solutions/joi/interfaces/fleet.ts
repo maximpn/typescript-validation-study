@@ -3,7 +3,7 @@
  * Do not modify this file manually
  */
 
-export type FleetSchema = {
+export type FleetSchema = ({
   driver?: {
     /**
      * Unknown Property
@@ -20,4 +20,4 @@ export type FleetSchema = {
     seats: number;
     type: 'car' | 'bus';
   };
-}[];
+})[];

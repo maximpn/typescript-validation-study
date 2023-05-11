@@ -21,6 +21,7 @@ const validators: Validators = {
   fleet: validator(schemas.FleetSchema),
   vehicle: validator(schemas.VehicleSchema),
   personForm: validator(schemas.PersonFormSchema),
+  discriminatedUnion: validator(schemas.DiscriminatedUnionSchema),
 };
 
 export default validators;

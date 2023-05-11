@@ -1,5 +1,5 @@
 import * as S from 'superstruct';
-import { personSchema } from './schemas';
+import { PersonSchema } from './schemas';
 
 describe('Person schema', () => {
   it('does not filter out extra fields', () => {
@@ -14,7 +14,7 @@ describe('Person schema', () => {
       extraField: 'something',
     };
 
-    const person = S.create(obj, personSchema);
+    const person = S.create(obj, PersonSchema);
 
     expect(person).toEqual({
       name: 'Some name',

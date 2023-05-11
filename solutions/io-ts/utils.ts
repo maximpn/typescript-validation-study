@@ -1,6 +1,84 @@
+import * as t from 'io-ts';
+import { Either } from 'fp-ts/lib/Either';
 import * as D from 'io-ts/Decoder';
 import { pipe } from 'fp-ts/lib/pipeable';
 import { either } from 'fp-ts/lib/Either';
+
+export const RestrictedString = <C extends t.StringC>({
+  minLength,
+  maxLength,
+  pattern,
+  name = `RestrictedString`,
+}: {
+  minLength?: number;
+  maxLength?: number;
+  pattern?: RegExp;
+  name?: string;
+}) => {
+  return new t.Type<string, string, unknown>(
+    name,
+    (input: unknown): input is string => typeof input === 'string',
+    (input, context): Either<t.Errors, string> => {
+      if (
+        typeof input === 'string' &&
+        ((minLength && input.length < minLength) ||
+          (maxLength && input.length > maxLength))
+      ) {
+        return t.failure(
+          input,
+          context,
+          `String size (${input.length}) is out of bounds: min: ${
+            minLength ?? 'not specified'
+          }, max: ${maxLength ?? 'not specified'}`
+        );
+      }
+
+      if (typeof input === 'string' && pattern && !pattern.test(input)) {
+        return t.failure(
+          input,
+          context,
+          `String does not match the pattern ${pattern.toString()})`
+        );
+      }
+
+      return t.string.validate(input, context);
+    },
+    t.identity
+  );
+};
+
+export const NonEmptyString = new t.Type<string, string, unknown>(
+  'NonEmptyString',
+  t.string.is,
+  (input, context): Either<t.Errors, string> => {
+    if (typeof input === 'string' && input.trim() !== '') {
+      return t.success(input);
+    } else {
+      return t.failure(input, context);
+    }
+  },
+  t.identity
+);
+
+export const NonEmptyArray = <C extends t.Mixed>(
+  codec: C,
+  name: string = `NonEmptyArray<${codec.name}>`
+) => {
+  const arrType = t.array(codec);
+  type ArrType = t.TypeOf<typeof arrType>;
+  return new t.Type<ArrType, ArrType, unknown>(
+    name,
+    arrType.is,
+    (input, context): Either<t.Errors, ArrType> => {
+      if (Array.isArray(input) && input.length === 0) {
+        return t.failure(input, context);
+      } else {
+        return arrType.validate(input, context);
+      }
+    },
+    t.identity
+  );
+};
 
 export const strMinLengthRefine = (n: number) =>
   D.refine(

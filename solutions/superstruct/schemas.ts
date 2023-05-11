@@ -1,6 +1,6 @@
 import * as S from 'superstruct';
 
-export const personSchema = S.type({
+export const PersonSchema = S.type({
   name: S.pattern(S.size(S.string(), 3, 20), /^[a-z A-Z ]+$/),
   dob: S.refine(
     S.coerce(S.date(), S.string(), (value) => new Date(value)),
@@ -11,11 +11,11 @@ export const personSchema = S.type({
   password: S.size(S.string(), 5),
 });
 
-export type Person = S.Infer<typeof personSchema>;
+export type Person = S.Infer<typeof PersonSchema>;
 
-export const personFormSchema = S.refine(
+export const PersonFormSchema = S.refine(
   S.assign(
-    personSchema,
+    PersonSchema,
     S.object({
       repeatPassword: S.string(),
     })
@@ -30,24 +30,36 @@ export const personFormSchema = S.refine(
       : false
 );
 
-export const driverSchema = S.assign(
-  personSchema,
+export const DriverSchema = S.assign(
+  PersonSchema,
   S.object({
     licenseNo: S.pattern(S.size(S.string(), 3, 30), /^[a-zA-Z]+$/),
   })
 );
 
-export const vehicleSchema = S.object({
+export const VehicleSchema = S.object({
   type: S.enums(['car', 'bus']),
   seats: S.min(S.integer(), 1),
   length: S.min(S.number(), 0, { exclusive: true }),
 });
 
-export const fleetSchema = S.array(
+export const FleetSchema = S.array(
   S.object({
-    driver: driverSchema,
-    vehicle: vehicleSchema,
+    driver: DriverSchema,
+    vehicle: VehicleSchema,
   })
 );
 
-export type Fleet = S.Infer<typeof fleetSchema>;
+export const DiscriminatedUnionSchema = S.union([
+  S.type({
+    foo: S.size(S.string(), 1),
+    bar: S.optional(S.never()),
+  }),
+  S.type({
+    foo: S.optional(S.never()),
+    bar: S.size(S.array(S.number()), 1),
+  }),
+]);
+
+export type Fleet = S.Infer<typeof FleetSchema>;
+export type DiscriminatedUnion = S.Infer<typeof DiscriminatedUnionSchema>;

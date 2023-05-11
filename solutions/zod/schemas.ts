@@ -1,6 +1,6 @@
 import * as z from 'zod';
 
-export const personSchema = z.object({
+export const PersonSchema = z.object({
   name: z
     .string()
     .min(3)
@@ -18,20 +18,18 @@ export const personSchema = z.object({
   password: z.string().min(5),
 });
 
-export const personFormSchema = personSchema
-  .extend({
-    repeatPassword: z.string(),
-  })
-  .refine((value) =>
-    value &&
-    value.password &&
-    value.repeatPassword &&
-    value.password === value.repeatPassword
-      ? true
-      : false
-  );
+export const PersonFormSchema = PersonSchema.extend({
+  repeatPassword: z.string(),
+}).refine((value) =>
+  value &&
+  value.password &&
+  value.repeatPassword &&
+  value.password === value.repeatPassword
+    ? true
+    : false
+);
 
-export const driverSchema = personSchema.extend({
+export const DriverSchema = PersonSchema.extend({
   licenseNo: z
     .string()
     .max(30)
@@ -39,17 +37,29 @@ export const driverSchema = personSchema.extend({
     .regex(/^[a-zA-Z]+$/),
 });
 
-export const vehicleSchema = z.object({
+export const VehicleSchema = z.object({
   type: z.enum(['car', 'bus']),
   seats: z.number().int().min(1),
   length: z.number().positive(),
 });
 
-export const fleetSchema = z.array(
+export const FleetSchema = z.array(
   z.object({
-    driver: driverSchema,
-    vehicle: vehicleSchema,
+    driver: DriverSchema,
+    vehicle: VehicleSchema,
   })
 );
 
-export type Fleet = z.TypeOf<typeof fleetSchema>;
+export const DiscriminatedUnionSchema = z.union([
+  z.object({
+    foo: z.string().nonempty(),
+    bar: z.never().optional(),
+  }),
+  z.object({
+    foo: z.never().optional(),
+    bar: z.array(z.number()).nonempty(),
+  }),
+]);
+
+export type Fleet = z.TypeOf<typeof FleetSchema>;
+export type DiscriminatedUnion = z.infer<typeof DiscriminatedUnionSchema>;

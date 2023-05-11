@@ -43,4 +43,16 @@ export const FleetSchema = rt.Array(
   })
 );
 
+export const DiscriminatedUnionSchema = rt.Union(
+  rt.Record({
+    foo: rt.String.withConstraint((str) => str.length > 0),
+    bar: rt.Never.optional(),
+  }),
+  rt.Record({
+    foo: rt.Never.optional(),
+    bar: rt.Array(rt.Number).withConstraint((arr) => arr.length > 0),
+  })
+);
+
 export type Fleet = rt.Static<typeof FleetSchema>;
+export type DiscriminatedUnion = rt.Static<typeof DiscriminatedUnionSchema>;

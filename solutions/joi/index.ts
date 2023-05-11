@@ -7,6 +7,7 @@ import {
   DriverSchema,
   VehicleSchema,
   FleetSchema,
+  DiscriminatedUnionSchema,
 } from './schemas';
 
 const validator: (schema: Joi.Schema) => (data: any) => any =
@@ -24,6 +25,7 @@ const validators: Validators = {
   fleet: validator(FleetSchema),
   vehicle: validator(VehicleSchema),
   personForm: validator(PersonFormSchema),
+  discriminatedUnion: validator(DiscriminatedUnionSchema),
 };
 
 export default validators;

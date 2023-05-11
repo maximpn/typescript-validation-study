@@ -9,11 +9,12 @@ const validator: (schema: z.ZodType<any, any>) => (data: any) => any =
   };
 
 const validators: Validators = {
-  person: validator(schemas.personSchema),
-  driver: validator(schemas.driverSchema),
-  fleet: validator(schemas.fleetSchema),
-  vehicle: validator(schemas.vehicleSchema),
-  personForm: validator(schemas.personFormSchema),
+  person: validator(schemas.PersonSchema),
+  driver: validator(schemas.DriverSchema),
+  fleet: validator(schemas.FleetSchema),
+  vehicle: validator(schemas.VehicleSchema),
+  personForm: validator(schemas.PersonFormSchema),
+  discriminatedUnion: validator(schemas.DiscriminatedUnionSchema),
 };
 
 export default validators;

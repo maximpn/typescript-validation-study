@@ -1,6 +1,8 @@
+import * as t from 'io-ts';
 import * as D from 'io-ts/Decoder';
 import { pipe } from 'fp-ts/lib/pipeable';
 import * as util from './utils';
+
 export const Person = pipe(
   D.type({
     name: pipe(
@@ -88,4 +90,24 @@ export const Fleet = D.array(
   })
 );
 
+export const DiscriminatedUnionSchema = t.union([
+  t.intersection([
+    t.type({
+      foo: util.NonEmptyString,
+    }),
+    t.partial({
+      bar: t.undefined,
+    }),
+  ]),
+  t.intersection([
+    t.partial({
+      foo: t.undefined,
+    }),
+    t.type({
+      bar: util.NonEmptyArray(t.number),
+    }),
+  ]),
+]);
+
 export type Fleet = D.TypeOf<typeof Fleet>;
+export type DiscriminatedUnion = t.TypeOf<typeof DiscriminatedUnionSchema>;

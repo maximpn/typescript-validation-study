@@ -1,4 +1,4 @@
-import { schema } from './kbn-config-schema';
+import { TypeOf, schema } from './kbn-config-schema';
 
 export const PersonSchema = schema.object(
   {
@@ -76,3 +76,16 @@ export const FleetSchema = schema.arrayOf(
     vehicle: VehicleSchema,
   })
 );
+
+export const DiscriminatedUnionSchema = schema.oneOf([
+  schema.object({
+    foo: schema.string({ minLength: 1 }),
+    bar: schema.maybe(schema.never()),
+  }),
+  schema.object({
+    foo: schema.maybe(schema.never()),
+    bar: schema.arrayOf(schema.number(), { minSize: 1 }),
+  }),
+]);
+
+export type DiscriminatedUnion = TypeOf<typeof DiscriminatedUnionSchema>;

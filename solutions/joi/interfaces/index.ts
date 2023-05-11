@@ -3,6 +3,14 @@
  * Do not modify this file manually
  */
 
+export type DiscriminatedUnionSchema = {
+  bar?: any;
+  foo: string;
+} | {
+  bar: number[];
+  foo?: any;
+};
+
 export interface DriverSchema {
   /**
    * Unknown Property
@@ -15,7 +23,7 @@ export interface DriverSchema {
   sex?: 'M' | 'F' | 'O';
 }
 
-export type FleetSchema = {
+export type FleetSchema = ({
   driver?: {
     /**
      * Unknown Property
@@ -32,7 +40,7 @@ export type FleetSchema = {
     seats: number;
     type: 'car' | 'bus';
   };
-}[];
+})[];
 
 export interface PersonFormSchema {
   /**

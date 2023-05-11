@@ -7,6 +7,7 @@ export interface Validators {
   driver?: Validator;
   vehicle?: Validator;
   fleet?: Validator;
+  discriminatedUnion?: Validator;
 }
 
 export type TestCase = {

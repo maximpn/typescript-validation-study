@@ -439,6 +439,47 @@ const _testCases: TestCases = [
     ],
     result: false,
   },
+  {
+    schema: 'discriminatedUnion',
+    id: 'option-1',
+    data: {
+      foo: 'some string',
+    },
+    result: true,
+  },
+  {
+    schema: 'discriminatedUnion',
+    id: 'option-1-invalid',
+    data: {
+      foo: '',
+    },
+    result: false,
+  },
+  {
+    schema: 'discriminatedUnion',
+    id: 'option-2',
+    data: {
+      bar: [1, 2],
+    },
+    result: true,
+  },
+  {
+    schema: 'discriminatedUnion',
+    id: 'option-2-invalid',
+    data: {
+      bar: [],
+    },
+    result: false,
+  },
+  {
+    schema: 'discriminatedUnion',
+    id: 'all-options',
+    data: {
+      foo: 'some string',
+      bar: [1, 2],
+    },
+    result: false,
+  },
 ];
 
 export const testCases = _testCases;

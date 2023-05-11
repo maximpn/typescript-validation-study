@@ -16,11 +16,11 @@ function runPerformanceTest(
   testCases: TestCases,
   solutions: [string, Validators][],
   repeatCycles: number
-): Record<string, Record<string, string>> {
-  const testCasesResults: Record<string, Record<string, string>> = {};
+): Record<string, Record<string, number>> {
+  const testCasesResults: Record<string, Record<string, number>> = {};
 
   for (const testCase of testCases) {
-    const testCaseResults: Record<string, string> = {};
+    const testCaseResults: Record<string, number> = {};
     const testCaseName = `${testCase.schema}: ${testCase.id} [${String(
       testCase.result
     ).toUpperCase()}]`;
@@ -45,7 +45,7 @@ function runPerformanceTest(
 
       const execTime = measureNTimesExecTime(validatorWrapper, repeatCycles);
 
-      testCaseResults[solutionName] = execTime.toFixed(2);
+      testCaseResults[solutionName] = parseFloat(execTime.toFixed(2));
     }
 
     testCasesResults[testCaseName] = testCaseResults;
