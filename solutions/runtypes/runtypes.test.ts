@@ -1,4 +1,4 @@
-import { personSchema } from './schemas';
+import { PersonSchema } from './schemas';
 
 describe('Person schema', () => {
   it('does not filter out extra fields', () => {
@@ -13,7 +13,7 @@ describe('Person schema', () => {
       extraField: 'something',
     };
 
-    const person = personSchema.check(obj);
+    const person = PersonSchema.check(obj);
 
     expect(person).toEqual({
       name: 'Some name',

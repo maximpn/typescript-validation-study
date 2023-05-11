@@ -16,10 +16,11 @@ const validator: (schema: RuntypeBase) => (data: unknown) => unknown =
   };
 
 const validators: Validators = {
-  person: validator(schemas.personSchema),
-  driver: validator(schemas.driverSchema),
-  fleet: validator(schemas.fleetSchema),
-  vehicle: validator(schemas.vehicleSchema),
+  person: validator(schemas.PersonSchema),
+  driver: validator(schemas.DriverSchema),
+  fleet: validator(schemas.FleetSchema),
+  vehicle: validator(schemas.VehicleSchema),
+  personForm: validator(schemas.PersonFormSchema),
 };
 
 export default validators;

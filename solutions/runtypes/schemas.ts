@@ -1,6 +1,6 @@
 import * as rt from 'runtypes';
 
-export const personSchema = rt.Record({
+export const PersonSchema = rt.Record({
   name: rt.String.withConstraint(
     (str) => str.length >= 3 && str.length <= 20 && /^[a-z A-Z ]+$/.test(str)
   ),
@@ -20,23 +20,27 @@ export const personSchema = rt.Record({
   password: rt.String.withConstraint((str) => str.length >= 5),
 });
 
-export const driverSchema = personSchema.extend({
+export const PersonFormSchema = PersonSchema.extend({
+  repeatPassword: rt.String,
+}).withConstraint((value) => value.password === value.repeatPassword);
+
+export const DriverSchema = PersonSchema.extend({
   licenseNo: rt.String.withConstraint(
     (str) => str.length >= 3 && str.length <= 30 && /^[a-zA-Z]+$/.test(str)
   ),
 });
 
-export const vehicleSchema = rt.Record({
+export const VehicleSchema = rt.Record({
   type: rt.Union(rt.Literal('car'), rt.Literal('bus')),
   seats: rt.Number.withConstraint((n) => Number.isInteger(n) && n >= 1),
   length: rt.Number.withConstraint((n) => n > 0),
 });
 
-export const fleetSchema = rt.Array(
+export const FleetSchema = rt.Array(
   rt.Record({
-    driver: driverSchema,
-    vehicle: vehicleSchema,
+    driver: DriverSchema,
+    vehicle: VehicleSchema,
   })
 );
 
-export type Fleet = rt.Static<typeof fleetSchema>;
+export type Fleet = rt.Static<typeof FleetSchema>;
