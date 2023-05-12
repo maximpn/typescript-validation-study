@@ -1,14 +1,7 @@
 // must export 'validators'
 import { Validators } from '../..';
 import { formatErrors } from './format_errors';
-import {
-  Person,
-  PersonForm,
-  Driver,
-  Vehicle,
-  Fleet,
-  DiscriminatedUnionSchema,
-} from './types';
+import * as schemas from './schemas';
 import { isRight } from 'fp-ts/Either';
 
 const validator: (decoder: any) => (data: any) => any =
@@ -23,12 +16,12 @@ const validator: (decoder: any) => (data: any) => any =
   };
 
 const validators: Validators = {
-  person: validator(Person),
-  driver: validator(Driver),
-  fleet: validator(Fleet),
-  vehicle: validator(Vehicle),
-  personForm: validator(PersonForm),
-  discriminatedUnion: validator(DiscriminatedUnionSchema),
+  person: validator(schemas.PersonSchema),
+  driver: validator(schemas.DriverSchema),
+  fleet: validator(schemas.FleetSchema),
+  vehicle: validator(schemas.VehicleSchema),
+  personForm: validator(schemas.PersonFormSchema),
+  discriminatedUnion: validator(schemas.DiscriminatedUnionSchema),
 };
 
 export default validators;

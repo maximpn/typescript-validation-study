@@ -1,4 +1,3 @@
-import { Person } from '../../io-ts/types';
 import { PersonSchema } from './person';
 import Joi from 'joi';
 

@@ -1,20 +1,17 @@
 import * as t from 'io-ts';
 import { Either } from 'fp-ts/lib/Either';
-import * as D from 'io-ts/Decoder';
-import { pipe } from 'fp-ts/lib/pipeable';
-import { either } from 'fp-ts/lib/Either';
 
-export const RestrictedString = <C extends t.StringC>({
+export const RestrictedString = ({
   minLength,
   maxLength,
   pattern,
   name = `RestrictedString`,
-}: {
-  minLength?: number;
-  maxLength?: number;
-  pattern?: RegExp;
-  name?: string;
-}) => {
+}: Partial<{
+  minLength: number;
+  maxLength: number;
+  pattern: RegExp;
+  name: string;
+}>) => {
   return new t.Type<string, string, unknown>(
     name,
     (input: unknown): input is string => typeof input === 'string',
@@ -47,6 +44,40 @@ export const RestrictedString = <C extends t.StringC>({
   );
 };
 
+export const DateString = ({ min }: Partial<{ min: Date }>) =>
+  new t.Type<string, string, unknown>(
+    'DateString',
+    t.string.is,
+    (input, context): Either<t.Errors, string> => {
+      if (typeof input !== 'string') {
+        return t.failure(input, context);
+      }
+
+      try {
+        const parsed = Date.parse(input);
+
+        if (isNaN(parsed)) {
+          return t.failure(input, context);
+        }
+
+        const parsedDate = new Date(parsed);
+
+        if (min && parsedDate > min) {
+          return t.failure(
+            input,
+            context,
+            `Date must be earlier than ${min.toISOString()})`
+          );
+        }
+
+        return t.success(input);
+      } catch (err) {
+        return t.failure(input, context);
+      }
+    },
+    t.identity
+  );
+
 export const NonEmptyString = new t.Type<string, string, unknown>(
   'NonEmptyString',
   t.string.is,
@@ -56,6 +87,28 @@ export const NonEmptyString = new t.Type<string, string, unknown>(
     } else {
       return t.failure(input, context);
     }
+  },
+  t.identity
+);
+
+export const NonNegativeNumber = new t.Type<number, number, unknown>(
+  'NonNegativeNumber',
+  t.number.is,
+  (input, context): Either<t.Errors, number> => {
+    return typeof input === 'number' && input >= 0
+      ? t.success(input)
+      : t.failure(input, context);
+  },
+  t.identity
+);
+
+export const PositiveInteger = new t.Type<number, number, unknown>(
+  'PositiveInteger',
+  t.number.is,
+  (input, context): Either<t.Errors, number> => {
+    return typeof input === 'number' && Number.isSafeInteger(input) && input > 0
+      ? t.success(input)
+      : t.failure(input, context);
   },
   t.identity
 );
@@ -79,59 +132,3 @@ export const NonEmptyArray = <C extends t.Mixed>(
     t.identity
   );
 };
-
-export const strMinLengthRefine = (n: number) =>
-  D.refine(
-    (input: string): input is string => input.length >= n,
-    `minimum length ${n}`
-  );
-
-export const strMaxLengthRefine = (n: number) =>
-  D.refine(
-    (input: string): input is string => input.length <= n,
-    `maximum length ${n}`
-  );
-
-export const strPatternRefine = (p: RegExp) =>
-  D.refine(
-    (input: string): input is string => p.test(input),
-    `does not conform to pattern`
-  );
-
-export const strDateRefine = D.refine(
-  (input: string): input is string => Date.parse(input) !== NaN,
-  `input is not date`
-);
-
-export const isUndefined = {
-  decode: (input: any) =>
-    input === undefined
-      ? D.success(undefined)
-      : D.failure(input, 'not undefined'),
-};
-
-export const strDateParser = D.parse<string, Date>((input: string) => {
-  const timestamp = Date.parse(input);
-  if (timestamp === NaN)
-    return D.failure(input, 'input cannot be parsed to date');
-  return D.success(new Date(timestamp));
-});
-
-export function withDefault<T>(defValue: T) {
-  return D.parse<unknown, T>((input: unknown) =>
-    input === undefined ? D.success(defValue) : D.success(input as T)
-  );
-}
-
-export const dateDaysBeforeNowRefine = (numberOfDays: number) =>
-  D.refine(
-    (input: Date): input is Date =>
-      new Date().getTime() - input.getTime() >
-      numberOfDays * 24 * 60 * 60 * 1000,
-    `not old enough`
-  );
-
-export const numIntegerRefine = D.refine(
-  (input: number): input is number => Number.isInteger(input),
-  'input is not integer'
-);
