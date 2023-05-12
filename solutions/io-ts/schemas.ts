@@ -1,56 +1,43 @@
 import * as t from 'io-ts';
-import * as utils from './utils';
-import { Either } from 'fp-ts/lib/Either';
+import { DateFromISOString } from 'io-ts-types';
 
 export const PersonSchema = t.intersection([
   t.type({
-    name: utils.RestrictedString({
-      minLength: 3,
-      maxLength: 20,
-      pattern: /[a-z A-Z ]+/,
-    }),
-    dob: utils.DateString({
-      min: new Date(Date.now() - 18 * 365 * 24 * 60 * 60 * 1000),
-    }),
-    password: utils.RestrictedString({ minLength: 5 }),
+    name: t.refinement(
+      t.string,
+      (s) => s.length >= 3 && s.length <= 20 && /[a-z A-Z ]+/.test(s)
+    ),
+    dob: t.refinement(
+      DateFromISOString,
+      (date) => date < new Date(Date.now() - 18 * 365 * 24 * 60 * 60 * 1000)
+    ),
+    password: t.refinement(t.string, (s) => s.length >= 5),
   }),
   t.partial({
     sex: t.union([t.literal('M'), t.literal('F'), t.literal('O')]),
   }),
 ]);
 
-export type Person = t.TypeOf<typeof PersonSchema>;
-
-const PersonFormSchemaWithoutValidation = t.intersection([
-  PersonSchema,
-  t.type({
-    repeatPassword: utils.RestrictedString({ minLength: 5 }),
-  }),
-]);
-
-export type PersonForm = t.TypeOf<typeof PersonFormSchemaWithoutValidation>;
-
-export const PersonFormSchema = PersonFormSchemaWithoutValidation.pipe(
-  new t.Type<PersonForm, PersonForm, PersonForm>(
-    'PersonFormSchema',
-    PersonFormSchemaWithoutValidation.is,
-    (input, context): Either<t.Errors, PersonForm> =>
-      input.password === input.repeatPassword
-        ? t.success(input)
-        : t.failure(input, context, 'repeat password does not match'),
-    t.identity
-  ),
-  ''
+export const PersonFormSchema = t.refinement(
+  t.intersection([
+    PersonSchema,
+    t.type({
+      repeatPassword: t.refinement(t.string, (s) => s.length >= 5),
+    }),
+  ]),
+  (form) => form.password === form.repeatPassword,
+  'repeat password and password must match'
 );
+
+export type PersonForm = t.TypeOf<typeof PersonFormSchema>;
 
 export const DriverSchema = t.intersection([
   PersonSchema,
   t.type({
-    licenseNo: utils.RestrictedString({
-      minLength: 3,
-      maxLength: 30,
-      pattern: /^[a-zA-Z]+$/,
-    }),
+    licenseNo: t.refinement(
+      t.string,
+      (s) => s.length >= 3 && s.length <= 30 && /^[a-zA-Z]+$/.test(s)
+    ),
   }),
 ]);
 
@@ -58,8 +45,8 @@ export type Driver = t.TypeOf<typeof DriverSchema>;
 
 export const VehicleSchema = t.type({
   type: t.union([t.literal('car'), t.literal('bus')]),
-  seats: utils.PositiveInteger,
-  length: utils.NonNegativeNumber,
+  seats: t.refinement(t.number, (n) => Number.isSafeInteger(n) && n > 0),
+  length: t.refinement(t.number, (n) => n > 0),
 });
 
 export type Vehicle = t.TypeOf<typeof VehicleSchema>;
@@ -76,7 +63,7 @@ export type Fleet = t.TypeOf<typeof FleetSchema>;
 export const DiscriminatedUnionSchema = t.union([
   t.intersection([
     t.type({
-      foo: utils.NonEmptyString,
+      foo: t.refinement(t.string, (s) => s.length > 0),
     }),
     t.partial({
       bar: t.undefined,
@@ -87,7 +74,7 @@ export const DiscriminatedUnionSchema = t.union([
       foo: t.undefined,
     }),
     t.type({
-      bar: utils.NonEmptyArray(t.number),
+      bar: t.refinement(t.array(t.number), (arr) => arr.length > 0),
     }),
   ]),
 ]);
