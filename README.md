@@ -1,12 +1,13 @@
-# typescript-validation-study
+# typescript-validation-study-2023
 
-Study of various typescript data validation solutions
+Study of various typescript data validation solutions (as of 2023). This repo is forked from [bingtimren](https://github.com/bingtimren/typescript-validation-study)'s research made a couple of years ago.
 
 ## Why?
 
-- Typescript type checking only occur at compile time.
-- Type information is not available at run-time
-- Protection is needed at runtime (user input from GUI, received from API)
+- Something could've changed since the last research
+- Some new libraries have appeared or gained popularity and it worths to add them to comparison
+- Good to see if libraries can handle harder use cases like a discriminated union
+- Good to see performance comparison
 
 ## Evaluation Goals
 
@@ -26,36 +27,90 @@ I wish to find a solution that satisfy the following goals:
 
 ## Example Problem and Test Criteria
 
-I validate the following entities with each of the solutions.
+The test case consists of
 
-Person:
+- `Person`
+- `PersonForm` extends `Person` and focuses on front end validation
+- `Driver` extends `Person`
+- `Vehicle`
+- `Fleet` consists of `Driver`s and `Vehicle`s
+- `DiscriminatedUnion` as some complex data structure
 
-- name: required, string, length 3~20, pattern /[a-z A-Z ]+/ (tests Find-grained, Form-friendly (reports actual length), Combinable / Customizable
-- dob: date, required, < now-18 (tests Fine-grained, Combinable / Customizable)
-- sex: optional, 'M', 'F', 'O'
-- password: not null, string, length >= 5
+These types defined below as TypeScript types with comments. In the best case the same types would be inferred by the libraries under consideration.
 
-PersonForm:
-extends Person (tests Extensible)
+```ts
+type Person = {
+  /**
+   * required, length 3~20, pattern /[a-z A-Z ]+/
+   * (tests Find-grained, Form-friendly (reports actual length)
+   * Combinable / Customizable
+   */
+  name: string;
+  /**
+   * required, < now-18
+   * (tests Fine-grained, Combinable / Customizable)
+   */
+  dob: Date; // or string if it's impossible to convert to Date
+  /**
+   * optional
+   */
+  sex?: 'M' | 'F' | 'O';
+  /**
+   * not null, length >= 5
+   */
+  password: string;
+};
 
-- repeatPassword: same as password (Customizable, Form-friendly)
+/**
+ * Extends Person
+ */
+type PersonForm = Person & {
+  /**
+   * same as password (Customizable, Form-friendly)
+   */
+  repeatPassword: string;
+};
 
-Driver:
-extends Person (tests Extensible)
+/**
+ * Extends Person
+ */
+type Driver = Person & {
+  /**
+   * length 3~30, pattern /^[a-zA-Z]+$/
+   */
+  licenseNo: string;
+};
 
-- licenseNo: string, length 3~30, pattern /^[a-zA-Z]+$/
+type Vehicle = {
+  /**
+   * length 3~30, pattern /^[a-zA-Z]+$/
+   */
+  type: 'car' | 'bus';
+  /**
+   * integer, >=1
+   */
+  seats: number;
+  /**
+   * > 0
+   */
+  length: number;
+};
 
-Vehicle:
+type Fleet = Array<{
+  driver: Driver;
+  vehicle: Vehicle;
+}>;
 
-- type: 'car','bus' (DRY)
-- seats: number, integer, >=1
-- length: number, >0
-
-Fleet: (tests Composable)
-[{
-driver: Driver,
-vehicle: Vehicle
-}]
+type DiscriminatedUnion =
+  | {
+      foo: string; // non empty string
+      bar?: never;
+    }
+  | {
+      foo?: never;
+      bar: [number, ...number[]]; // Non empty number array
+    };
+```
 
 ## Candidate Criteria
 
