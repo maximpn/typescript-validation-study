@@ -120,38 +120,36 @@ Validation is done against plain Javascript objects, not requiring data to be cl
 
 ## Test Method
 
-I implement validators using each of the tested solutions to validate the above entities. Find them in [/solutions](/solutions).
+There are validators using each of the tested solutions to validate the above entities. Find them in [/solutions](/solutions).
 
-Each module in the "solutions" dir exports a set of validators. I use them to validate the same set of [data](/validation-data.ts). Each solution needs to pass all the tests. To run the tests, execute `npm t`. While running the tests, the schemas are also compiled into typescript types, and you can find those in each solution's respective folders. Check the "pre" run script in [package.json](package.json).
-
-To examine if the validation result contains all the information for UI form, I used a "fleet" instance as example. Every items and fields of that instance have validation errors. The returned object should describe the problems in full. Run `npm run inspect` to examine the returned error object by each solution in checking that "fleet" instance.
+Each module in the "solutions" dir exports a set of validators which run against a set of [data](/validation-data.ts). Each solution needs to pass all the tests. To run the tests, execute `npm t`. While running the tests, the schemas are also compiled into typescript types, and you can find those in each solution's respective folders. Check the "pre" run script in [package.json](package.json).
 
 ## Results
 
-### io-ts
+### io-ts@2.2.20
 
-Reference: https://medium.com/swlh/typescript-runtime-validation-with-io-ts-456f095b7f86
-
-| Goal          | Achieved | Comment                                                                                                                                                                                                                                                                                                                                                                |
-| ------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| DRY           | Yes      | Define run-time type, extract corresponding static type                                                                                                                                                                                                                                                                                                                |
-| Composable    | Yes      | Defined run-time types can be used as building blocks for other types                                                                                                                                                                                                                                                                                                  |
-| Extensible    | Yes      | Use 'pipe' to add properties                                                                                                                                                                                                                                                                                                                                           |
-| Fine-grained  | Yes/no   | Not out-of-box, but can write custom decoders                                                                                                                                                                                                                                                                                                                          |
-| Combinable    | Yes      | Uses 'pipe' to combine multiple validators                                                                                                                                                                                                                                                                                                                             |
-| Form-friendly | Yes-but  | Look at the returned object, all errors about all nodes of the data are there. However the useful information is buried in a myriad of wrappers and difficult to use. There is a default error reporter that is able to retrieve the information and organize in a meaningful way, meaning utilization of the information is possible, but more work needs to be done. |
-| Fail-fast     | No       | The decoder does not stop at first error                                                                                                                                                                                                                                                                                                                               |
-| Customizable  | Yes      | Can write custom decoders, refines, etc.                                                                                                                                                                                                                                                                                                                               |
-| T-coercion    | Yes      | Strong typed parser can parse one type to another                                                                                                                                                                                                                                                                                                                      |
-| Default       | Yes      | Though need some complex tweaks                                                                                                                                                                                                                                                                                                                                        |
-| Traversable   | No       | The realtime type is a decoder, with a decode function                                                                                                                                                                                                                                                                                                                 |
-| Standard      | No       | Realtime type defined with io-ts                                                                                                                                                                                                                                                                                                                                       |
+| Goal                                       | Achieved                | Comment                                                                                                        |
+| ------------------------------------------ | ----------------------- | -------------------------------------------------------------------------------------------------------------- |
+| One definition, multi-uses                 | Yes                     |                                                                                                                |
+| Composable and extensible schema           | Yes                     | It becomes less readable when the type is complex                                                              |
+| OOTB validators                            | only basic              | [**io-ts-types**](https://www.npmjs.com/package/io-ts-types) package provides more                             |
+| Easiness to extend with custom validation  | Yes                     | **t.refinement()** gives a lot of flexibility                                                                  |
+| Type transformation (coercion)             |                         |                                                                                                                |
+| Strips off unknown fields                  | Either fails or ignores | There is no a simple way to fine tune it                                                                       |
+| Fluent type declaration                    | No                      |                                                                                                                |
+| Optional and default fields                | Yes                     | **fromNullable()** from [**io-ts-types**](https://www.npmjs.com/package/io-ts-types) helps with default fields |
+| Complex types (e.g. a discriminated union) | Yes                     | An inferred type for a discriminated union looks like ![](images/io-ts_discriminated-union.png)                |
+| Performance                                | Good                    |                                                                                                                |
+| Dependencies                               | **fp-ts**               |                                                                                                                |
+| Docs quality                               | scarce                  |                                                                                                                |
+| Size minzipped                             | 5.2 KB                  |                                                                                                                |
+|                                            |
 
 Comment:
 
-To use io-ts also means to use at least some basic fp-ts and functional programming.
+The situation hasn't change a lot in two years. To use **io-ts** also means to use at least some basic **fp-ts** and functional programming.
 
-Generally when schema is a bit complex, type inference does not work that well. Also because io-ts kind of insisting functional programming purity, somethings it's difficult to figure out how to make things work as I'm not very familiar with functional programming.
+The simplest way to cover the majority of cases is to use **t.refinement()** with codecs from **io-ts-types** package though it becomes very tricky and time consuming to define some complex schemas with custom codecs despite **io-ts** is really flexible. Taking into account it can contain optional fields and more than one intersection the readability will definitely suffer increasing maintenance costs. As the good side **io-ts** is pretty fast with run time validation.
 
 ### Joi
 
@@ -317,24 +315,6 @@ Superstruct is yet another validator defining schema with code. However the deve
 
 However the size of superstruct is very small, if not the smallest among the candidates. Type inference works the best among the type inference solutions. About enum, for type inference to work, it should be passed an array literal like this: `S.optional(S.defaulted(S.enums(["M", "F", "O"] as const), "O"))`
 
-## Honorary Mention
-
-### Package v8n
-
-It looks like yet another validator similar to joi / yup. However looks like it's still under work to properly support typescript.
-
-### Package validate-typescript
-
-Yet another validator, last published 2 years ago, not very popular, and no static type extraction support in the box.
-
-### validate.js
-
-It doesn't seem to have Typescript support
-
-### validator.js
-
-String only but feature rich validator. May use to build custom format or refinement.
-
 ## Conclusion
 
 For Json schema based, ajv is a good choice. Also it's much more popular then the other options. However JSON schema is more verbose than, and a bit more difficult to work with (still ok) than schema defined with codes.
@@ -378,5 +358,23 @@ Reference: https://learning-notes.mistermicheels.com/javascript/typescript/runti
 | Customizable  |          |         |
 | Traversable   |          |         |
 | Standard      |          |         |
+
+Comment:
+
+| Goal                                       | Achieved | Comment |
+| ------------------------------------------ | -------- | ------- |
+| One definition, multi-uses                 |          |         |
+| Composable and extensible schema           |          |         |
+| OOTB validators                            |          |         |
+| Easiness to extend with custom validation  |          |         |
+| Type transformation (coercion)             |          |         |
+| Strips off unknown fields                  |          |         |
+| Fluent type declaration                    |          |         |
+| Optional and default fields                |          |         |
+| Complex types (e.g. a discriminated union) |          |         |
+| Performance                                |          |         |
+| Dependencies                               |          |         |
+| Docs quality                               |          |         |
+| Size minzipped                             |          |         |
 
 Comment:
