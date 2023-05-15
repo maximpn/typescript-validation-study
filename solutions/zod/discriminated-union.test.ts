@@ -1,4 +1,4 @@
-import { DiscriminatedUnionSchema } from './discriminated-union';
+import { DiscriminatedUnionSchema } from './schemas';
 
 describe('Zod discriminated union', () => {
   it('validates the first option successfully', () => {
