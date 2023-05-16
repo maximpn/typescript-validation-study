@@ -134,7 +134,7 @@ Each module in the "solutions" dir exports a set of validators which run against
 | Composable and extensible schema           | Yes                     | It becomes less readable when the type is complex                                                              |
 | OOTB validators                            | only basic              | [**io-ts-types**](https://www.npmjs.com/package/io-ts-types) package provides more                             |
 | Easiness to extend with custom validation  | Yes                     | **t.refinement()** gives a lot of flexibility                                                                  |
-| Type transformation (coercion)             |                         |                                                                                                                |
+| Type transformation (coercion)             | Yes                     |                                                                                                                |
 | Strips off unknown fields                  | Either fails or ignores | There is no a simple way to fine tune it                                                                       |
 | Fluent type declaration                    | No                      |                                                                                                                |
 | Optional and default fields                | Yes                     | **fromNullable()** from [**io-ts-types**](https://www.npmjs.com/package/io-ts-types) helps with default fields |
