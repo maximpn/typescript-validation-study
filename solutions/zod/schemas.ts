@@ -63,3 +63,19 @@ export const DiscriminatedUnionSchema = z.union([
 
 export type Fleet = z.TypeOf<typeof FleetSchema>;
 export type DiscriminatedUnion = z.infer<typeof DiscriminatedUnionSchema>;
+
+export type SomeIntersection = z.infer<typeof SomeIntersectionSchema>;
+export const SomeIntersectionSchema = z.intersection(
+  z
+    .object({
+      a: z.string(),
+      b: z.number(),
+    })
+    .strict(),
+  z
+    .object({
+      c: z.boolean(),
+      d: z.number(),
+    })
+    .strict()
+);

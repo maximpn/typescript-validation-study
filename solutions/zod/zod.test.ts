@@ -1,4 +1,4 @@
-import { PersonSchema } from './schemas';
+import { PersonSchema, SomeIntersectionSchema } from './schemas';
 
 describe('Person schema', () => {
   it('filters out extra fields', () => {
@@ -20,6 +20,26 @@ describe('Person schema', () => {
       dob: new Date(dob),
       sex: 'M',
       password: '12345',
+    });
+  });
+});
+
+describe('strict intersection', () => {
+  it('works', () => {
+    const obj = {
+      a: 'abc',
+      b: 10,
+      c: true,
+      d: 20,
+    };
+
+    const parsedObj = SomeIntersectionSchema.parse(obj);
+
+    expect(parsedObj).toEqual({
+      a: 'abc',
+      b: 10,
+      c: true,
+      d: 20,
     });
   });
 });
