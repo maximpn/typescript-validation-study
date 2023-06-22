@@ -61,7 +61,7 @@ export const DiscriminatedUnionSchema = z.union([
   }),
 ]);
 
-export type Fleet = z.TypeOf<typeof FleetSchema>;
+export type Fleet = z.infer<typeof FleetSchema>;
 export type DiscriminatedUnion = z.infer<typeof DiscriminatedUnionSchema>;
 
 export type SomeIntersection = z.infer<typeof SomeIntersectionSchema>;
